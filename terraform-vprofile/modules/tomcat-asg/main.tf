@@ -116,3 +116,11 @@ variable "target_group_arn" {
   description = "Target group ARN for ASG"  # Link to ALB
   type        = string
 }
+
+locals {
+  tags = {
+    Environment = "dev"
+    ManagedBy   = "Terraform"
+    Project     = "proton"
+  }
+}

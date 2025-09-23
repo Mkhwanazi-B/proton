@@ -155,3 +155,11 @@ output "mc01_private_ip" {
 output "rmq01_private_ip" {
   value = aws_instance.rabbitmq.private_ip  # RabbitMQ private IP
 }
+
+locals {
+  tags = {
+    Environment = "dev"
+    ManagedBy   = "Terraform"
+    Project     = "proton"
+  }
+}

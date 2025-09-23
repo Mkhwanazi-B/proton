@@ -72,3 +72,11 @@ module "supporting_instances" {
   subnet_ids        = data.aws_subnets.public.ids                 # Pass public subnet IDs
   route53_zone_id   = data.aws_route53_zone.vprofile_zone.zone_id # Pass zone ID
 }
+
+locals {
+  tags = {
+    Environment = "dev"
+    ManagedBy   = "Terraform"
+    Project     = "proton"
+  }
+}
