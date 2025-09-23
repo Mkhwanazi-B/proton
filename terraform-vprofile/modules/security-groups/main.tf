@@ -129,10 +129,3 @@ output "support_sg_id" {
   value = aws_security_group.support_sg.id  # ID for support services security group
 }
 
-locals {
-  tags = {
-    Environment = "dev"
-    ManagedBy   = "Terraform"
-    Project     = "proton"
-  }
-}

@@ -117,10 +117,3 @@ variable "target_group_arn" {
   type        = string
 }
 
-locals {
-  tags = {
-    Environment = "dev"
-    ManagedBy   = "Terraform"
-    Project     = "proton"
-  }
-}

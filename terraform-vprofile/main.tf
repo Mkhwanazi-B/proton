@@ -74,7 +74,7 @@ module "supporting_instances" {
 }
 
 locals {
-  tags = {
+  common_tags = {
     Environment = "dev"
     ManagedBy   = "Terraform"
     Project     = "proton"
