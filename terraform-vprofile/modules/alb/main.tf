@@ -75,3 +75,11 @@ output "alb_dns_name" {
 output "target_group_arn" {
   value = aws_lb_target_group.tomcat_tg.arn  # ARN for ASG attachment
 }
+
+locals {
+  tags = {
+    Environment = "dev"
+    ManagedBy   = "Terraform"
+    Project     = "proton"
+  }
+}
