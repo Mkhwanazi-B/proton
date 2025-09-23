@@ -1,0 +1,86 @@
+name: Terraform CI/CD
+
+# Trigger the workflow on push or pull request events to the main branch
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+# Define the job
+jobs:
+  terraform:
+    # Run on an Ubuntu environment
+    runs-on: ubuntu-latest
+
+    # Default environment variables and secrets
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_REGION: eu-north-1
+      TF_STATE_BUCKET: terraform-state-file-999999
+      TF_STATE_KEY: terraform/terraform.tfstate
+
+    # Steps to execute
+    steps:
+      # Check out the repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Set up Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.5  # Use a specific version compatible with your setup
+
+      # Initialize Terraform working directory
+      - name: Terraform Init
+        run: terraform init
+        working-directory: terraform-vprofile
+        env:
+          TF_BACKEND_CONFIG: "bucket=${TF_STATE_BUCKET} key=${TF_STATE_KEY} region=${AWS_REGION}"
+
+      # Validate Terraform configuration
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: terraform-vprofile
+
+      # Generate and store Terraform plan
+      - name: Terraform Plan
+        run: terraform plan -input=false -out=tfplan
+        working-directory: terraform-vprofile
+        id: plan
+
+      # Upload the plan as an artifact for review
+      - name: Upload Plan Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: terraform-vprofile/tfplan
+
+      # Request manual approval before applying
+      - name: Request Manual Approval
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'  # Only on main branch push
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const response = await github.rest.pulls.createReview({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              event: 'REQUEST_CHANGES',
+              body: 'Please review the Terraform plan and approve the deployment.'
+            });
+            if (response.status !== 200) {
+              core.setFailed('Failed to request approval');
+            }
+
+      # Apply Terraform changes after manual approval
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'  # Only on main branch push
+        run: terraform apply tfplan
+        working-directory: terraform-vprofile
+        env:
+          TF_INPUT: "0"  # Disable interactive input
