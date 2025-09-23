@@ -50,6 +50,16 @@ jobs:
           name: tfplan
           path: terraform-vprofile/tfplan
 
+      - name: Create human-readable plan
+        working-directory: terraform-vprofile
+        run: terraform show -no-color tfplan > tfplan.txt
+
+      - name: Upload text plan artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan-text
+          path: terraform-vprofile/tfplan.txt
+
       # Optional manual approval step (kept as-is if you use it)
       - name: Request Manual Approval
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
