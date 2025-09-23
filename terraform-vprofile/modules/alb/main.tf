@@ -9,7 +9,7 @@ resource "aws_lb" "alb" {
 
   enable_deletion_protection = false  # Disable for testing; enable in production
 
-  tags = local.tags  # Apply common tags
+  tags = var.tags # Apply common tags
 }
 
 # Target group for routing traffic to Tomcat instances
@@ -30,7 +30,7 @@ resource "aws_lb_target_group" "tomcat_tg" {
     unhealthy_threshold = 2           # 2 consecutive failures
   }
 
-  tags = local.tags  # Apply common tags
+  tags = var.tags  # Apply common tags
 }
 
 # Listener to route HTTP traffic to the target group

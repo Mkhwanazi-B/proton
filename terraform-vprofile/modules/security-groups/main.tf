@@ -26,7 +26,7 @@ resource "aws_security_group" "alb_sg" {
     cidr_blocks = ["0.0.0.0/0"]  # Allow all outbound traffic
   }
 
-  tags = local.tags  # Apply common tags
+  tags = var.tags  # Apply common tags
 }
 
 # Security group for Tomcat EC2 instances
@@ -57,7 +57,7 @@ resource "aws_security_group" "tomcat_sg" {
     cidr_blocks = ["0.0.0.0/0"]  # Allow all outbound traffic
   }
 
-  tags = local.tags  # Apply common tags
+  tags = var.tags  # Apply common tags
 }
 
 # Security group for supporting services (MySQL, Memcached, RabbitMQ)
@@ -102,7 +102,7 @@ resource "aws_security_group" "support_sg" {
     cidr_blocks = ["0.0.0.0/0"]  # Allow all outbound traffic
   }
 
-  tags = local.tags  # Apply common tags
+  tags = var.tags  # Apply common tags
 }
 
 # Variables passed from the parent module

@@ -35,7 +35,7 @@ resource "aws_launch_template" "tomcat_lt" {
 
   tag_specifications {
     resource_type = "instance"  # Apply tags to instances
-    tags          = local.tags  # Common tags
+    tags          = var.tags  # Common tags
   }
 }
 
@@ -50,7 +50,7 @@ resource "aws_instance" "tomcat_temp" {
   associate_public_ip_address = true                # Public IP for access
   security_groups = [var.security_group_id]         # Apply Tomcat SG
 
-  tags = merge(local.tags, { Name = "vprofile-tomcat-temp" })  # Temp instance tag
+  tags = merge(var.tags, { Name = "vprofile-tomcat-temp" })  # Temp instance tag
 
   # Create AMI and terminate instance post-setup
   provisioner "local-exec" {

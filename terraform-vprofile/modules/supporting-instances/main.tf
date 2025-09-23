@@ -32,7 +32,7 @@ resource "aws_instance" "mysql" {
               EOF
   )
 
-  tags = merge(local.tags, { Name = "vprofile-mysql" })  # Specific instance tag
+  tags = merge(var.tags, { Name = "vprofile-mysql" })  # Specific instance tag
 }
 
 # Memcached Instance resource
@@ -58,7 +58,7 @@ resource "aws_instance" "memcached" {
               EOF
   )
 
-  tags = merge(local.tags, { Name = "vprofile-memcached" })  # Specific instance tag
+  tags = merge(var.tags, { Name = "vprofile-memcached" })  # Specific instance tag
 }
 
 # RabbitMQ Instance resource
@@ -87,7 +87,7 @@ resource "aws_instance" "rabbitmq" {
               EOF
   )
 
-  tags = merge(local.tags, { Name = "vprofile-rabbitmq" })  # Specific instance tag
+  tags = merge(var.tags, { Name = "vprofile-rabbitmq" })  # Specific instance tag
 }
 
 # Route 53 A Record for MySQL
